@@ -2,7 +2,7 @@
 
 This repository is the official implementation of [Learning Multi-Agent Coordination for Enhancing Target Coverage in Directional Sensor Networks](https://arxiv.org/abs/2030.12345). 
 
-![](graphicExplaining/DSN_5.Jpeg 50%)
+![](graphicExplaining/DSN_5.Jpeg)
 >📋  Optional: include a graphic explaining your approach/main result, bibtex entry, link to demos, blog posts and tutorials
 
 ## Requirements
