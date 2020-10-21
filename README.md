@@ -5,6 +5,9 @@ This repository is the official implementation of [Learning Multi-Agent Coordina
 ![](graphicExplaining/DSN_5.Jpeg)
 >📋  Project website: [HiT-MAC](https://sites.google.com/view/hit-mac)
 
+## Environment
+If you want to try your own algorithm in our environment, [here](https://github.com/XuJing1022/DSN) is a pure and non-hierarchical DSN environment for you.
+
 ## Requirements
 
 To install requirements:
@@ -48,7 +51,6 @@ Our model achieves the following performance compared with baselines:
 | ILP                |     85%         |      95%       |
 | HiT-MAC            |     85%         |      95%       |
 
-
 ## Contributing
-
+If you found this work useful, please consider citing:
 >📋  Pick a licence and describe how to contribute to your code repository. 
