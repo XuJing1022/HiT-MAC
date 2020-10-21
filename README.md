@@ -3,7 +3,7 @@
 This repository is the official implementation of [Learning Multi-Agent Coordination for Enhancing Target Coverage in Directional Sensor Networks](https://arxiv.org/abs/2030.12345). 
 
 ![](graphicExplaining/DSN_5.Jpeg)
->📋  Optional: include a graphic explaining your approach/main result, bibtex entry, link to demos, blog posts and tutorials
+>📋  Project website: [HiT-MAC](https://sites.google.com/view/hit-mac)
 
 ## Requirements
 
@@ -14,44 +14,39 @@ pip install -r requirements.txt
 ```
 
 ## Training
-
-To train the model(s) in the paper, run this command:
+To train the executor in the paper, run this command:
 
 ```train
-python train.py --input-data <path_to_data> --alpha 10 --beta 20
+CUDA_VISIBLE_DEVICES=-1 python main.py --env Pose-v0 --model single-att --workers 6
 ```
 
->📋  Describe how to train the models, with example commands on how to train the models in your paper, including the full training procedure and appropriate hyperparameters.
+To train the coordinator in the paper, run this command:
+
+```train
+CUDA_VISIBLE_DEVICES=-1 python main.py --env Pose-v1 --model multi-att-shap --workers 6
+```
 
 ## Evaluation
 
-To evaluate my model on ImageNet, run:
+To evaluate my model, run:
 
 ```eval
-python eval.py --model-file mymodel.pth --benchmark imagenet
+CUDA_VISIBLE_DEVICES=-1 python main.py --env Pose-v1 --model multi-att-shap --workers 0 --load-model-dir trainedModel/best_coordinator.pth
 ```
 
->📋  Describe how to evaluate the trained models on benchmarks reported in the paper, give commands that produce the results (section below).
-
-## Pre-trained Models
-
-You can download pretrained models here:
-
-- [My awesome model](https://drive.google.com/mymodel.pth) trained on ImageNet using parameters x,y,z. 
-
->📋  Give a link to where/how the pretrained models can be downloaded and how they were trained (if applicable).  Alternatively you can have an additional column in your results table with a link to the models.
+You can use trained models directly from the folder "trainedModel".
 
 ## Results
 
-Our model achieves the following performance on :
+Our model achieves the following performance compared with baselines:
 
-### [Image Classification on ImageNet](https://paperswithcode.com/sota/image-classification-on-imagenet)
-
-| Model name         | Top 1 Accuracy  | Top 5 Accuracy |
+| Model name         | Coverage Rate   | Average Gain   |
 | ------------------ |---------------- | -------------- |
-| My awesome model   |     85%         |      95%       |
-
->📋  Include a table of results from your paper, and link back to the leaderboard for clarity and context. If your main result is a figure, include that figure and link to the command or notebook to reproduce it. 
+| MADDPG             |     85%         |      95%       |
+| SQDDPG             |     85%         |      95%       |
+| COMA               |     85%         |      95%       |
+| ILP                |     85%         |      95%       |
+| HiT-MAC            |     85%         |      95%       |
 
 
 ## Contributing

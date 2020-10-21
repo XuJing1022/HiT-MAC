@@ -1,13 +1,4 @@
 # -*- coding: UTF-8 -*-
-
-"""
-@version: python3
-@author: Xu Jing
-@contact: xujingdaily@gmail.com
-@site: https://github.com/XuJing1022
-@file: __init__.py.py
-@created: 19-7-4 下午6:09
-"""
 from ENV.DigitalPose2DBase.pose_env_base import Pose_Env_Base
 
 

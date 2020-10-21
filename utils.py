@@ -102,23 +102,9 @@ def goal_id_filter(goals):
     return np.where(goals > 0.5)[0]
 
 
-def proprocess_action(action):
-    # # set -1 if action is negative
-    # action[action < 0] = -1
-    # # norm
-    # for goals in action:
-    #     goal_ids = list(set(np.where(goals > 0.)[0]))  # & set(camera_target_visible)
-    #     if goal_ids:
-    #         goals[goal_ids] /= goals[goal_ids].sum()
-
-    # print('action', action)
-    return action
-
-
 def norm(x, scale):
     assert len(x.shape) <= 2
-    x = scale * (x - x.mean(0)) / (
-                x.std(0) + 1e-6)  # normalize with batch mean and std; plus a small number to prevent numerical problem
+    x = scale * (x - x.mean(0)) / (x.std(0) + 1e-6)  # normalize with batch mean and std; plus a small number to prevent numerical problem
     return x
 
 

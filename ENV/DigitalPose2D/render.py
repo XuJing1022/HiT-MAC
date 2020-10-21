@@ -28,7 +28,7 @@ visual_distance = 100
 
 
 def render(camera_pos, target_pos, reward=None,
-           goal=None, savestep=None, save=False):
+           goal=None, save=False):
     camera_pos = np.array(camera_pos)
     target_pos = np.array(target_pos)
 
@@ -50,8 +50,6 @@ def render(camera_pos, target_pos, reward=None,
     target_position = length * (1 - np.array(target_position) / area_length) / 2
     abs_angles = [camera_pos[i][2] * -1 for i in range(num_cam)]
 
-    # plt.clf()
-    # plt.close('all')
     fig = plt.figure(0)
     plt.cla()
     plt.imshow(img.astype(np.uint8))
@@ -83,14 +81,8 @@ def render(camera_pos, target_pos, reward=None,
     for i in range(num_cam):
         theta = abs_angles[i]  # -90
         theta -= 90
-        dx = L * math.sin(theta * math.pi / 180)
-        dy = L * math.cos(theta * math.pi / 180)
-
         the1 = theta - 45
-        dxy1 = [L * math.sin(the1 * math.pi / 180), L * math.cos(the1 * math.pi / 180)]
-
         the2 = theta + 45
-        dxy2 = [L * math.sin(the2 * math.pi / 180), L * math.cos(the2 * math.pi / 180)]
 
         a = camera_position[i][0] + visua_len
         b = camera_position[i][1] + visua_len
@@ -104,13 +96,8 @@ def render(camera_pos, target_pos, reward=None,
                      xytext=(camera_position[i][0] + visua_len, camera_position[i][1] + visua_len), fontsize=10,
                      color='black')
 
-
     plt.text(5, 5, '{} sensors & {} targets'.format(num_cam, num_target), color="black")
 
-    # plot reward
-    # if reward is not None:
-    #     plt.text(0, 580, 'Reward: ' + str(reward), weight="bold", color="b")
-    # plot target
     for i in range(num_target):
         plt.plot(target_position[i][0] + visua_len, target_position[i][1] + visua_len, color='firebrick',
                  marker="o")
@@ -127,11 +114,9 @@ def render(camera_pos, target_pos, reward=None,
 
     plt.axis('off')
     # plt.show()
-    if savestep or save:
-        if savestep is None:
-            savestep = 0
+    if save:
         file_path = '../demo/img'
-        file_name = '{}_{}.jpg'.format(datetime.now(), savestep)
+        file_name = '{}.jpg'.format(datetime.now())
         if not os.path.exists(file_path):
             os.makedirs(file_path)
         plt.savefig(os.path.join(file_path, file_name))

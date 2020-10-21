@@ -69,7 +69,6 @@ def start():
             map_location=lambda storage, loc: storage)
         if args.load_model_dir[-3:] == 'pth':
             shared_model.load_state_dict(saved_state['model'], strict=False)
-            # optimizer.load_state_dict(saved_state['optimizer'])
         else:
             shared_model.load_state_dict(saved_state)
 
@@ -84,15 +83,8 @@ def start():
     else:
         optimizer = None
 
-    # if args.load_model_dir is not None:
-    #     if args.load_model_dir[-3:] == 'pth':
-    #         optimizer.load_state_dict(saved_state['optimizer'])
-
     current_time = datetime.now().strftime('%b%d_%H-%M')
     args.log_dir = os.path.join(args.log_dir, args.env, current_time)
-
-    # if args.gpu_ids[-1] == -1:
-    #     env.close()
 
     processes = []
     manager = mp.Manager()
