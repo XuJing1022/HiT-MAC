@@ -142,7 +142,6 @@ class Pose_Env_Base:
         camera_id_list = [i for i in self.cam_id]
         random.shuffle(camera_id_list)
 
-        # z = np.random.randint(self.cam_area[0][4], self.cam_area[0][5])
         for i, cam in enumerate(self.cam_id):
             cam_loc = [np.random.randint(self.cam_area[i][0], self.cam_area[i][1]),
                        np.random.randint(self.cam_area[i][2], self.cam_area[i][3])
@@ -150,10 +149,8 @@ class Pose_Env_Base:
             self.set_location(camera_id_list[i], cam_loc)  # shuffle
 
         for i, cam in enumerate(self.cam_id):
-            cam_loc = self.get_location(cam)
-            cam_rot = self.get_rotation(cam)  # TODO DEBUG
+            cam_rot = self.get_rotation(cam)
 
-            # angle_h = self.get_hori_direction(cam_loc + cam_rot, self.target_pos_list[i])
             # start with non-focusing
             angle_h = np.random.randint(-180, 180)
             cam_rot[0] += angle_h * 1.0
@@ -219,7 +216,6 @@ class Pose_Env_Base:
                 delta_y = target_hpr_now[1] * action[0] * delta_time
                 while loc[0] + delta_x < self.reset_area[0] or loc[0] + delta_x > self.reset_area[1] or \
                         loc[1] + delta_y < self.reset_area[2] or loc[1] + delta_y > self.reset_area[3]:
-                    # print('retry: ', loc, action)
                     action = self.random_agents[i].act(loc)
 
                     target_hpr_now = np.array(action[1:])
@@ -357,7 +353,7 @@ class Pose_Env_Base:
                 cam_loc, cam_rot = cam_info[i]
                 action = self.get_baseline_action(cam_loc + cam_rot, GoalMap[i], i)
                 if action[0] != 0:
-                    cost += -0.1
+                    cost += 1
                 cam_rot[0] += action[0]
                 cam_info[i] = cam_loc, cam_rot
                 Cam_Pose.append(cam_loc + cam_rot)

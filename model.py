@@ -160,12 +160,6 @@ class EncodeBiRNN(torch.nn.Module):
         super(EncodeBiRNN, self).__init__()
         self.head_name = head_name
 
-        # self.features = nn.Sequential(
-        #     nn.Linear(dim_in, 128),  # 1, 64,123, 123
-        #     nn.ReLU(inplace=True),
-        #     nn.Linear(128, 128)
-        # )
-
         self.encoder = BiRNN(dim_in, int(lstm_out / 2), 1, device, 'gru')
 
         self.feature_dim = self.encoder.feature_dim
@@ -189,7 +183,7 @@ class EncodeLinear(torch.nn.Module):
         super(EncodeLinear, self).__init__()
 
         self.features = nn.Sequential(
-            nn.Linear(dim_in, dim_out),  # 1, 64,123, 123
+            nn.Linear(dim_in, dim_out),
             nn.ReLU(inplace=True),
             nn.Linear(dim_out, dim_out),
             nn.ReLU(inplace=True)
@@ -197,7 +191,6 @@ class EncodeLinear(torch.nn.Module):
 
         self.head_name = head_name
         self.feature_dim = dim_out
-        # self.apply(weights_init)
         self.train()
 
     def forward(self, inputs):
@@ -210,7 +203,7 @@ class A3C_Single(torch.nn.Module):  # single vision Tracking
     def __init__(self, obs_space, action_spaces, args, device=torch.device('cpu')):
         super(A3C_Single, self).__init__()
         self.n = len(obs_space)
-        obs_dim = obs_space[0].shape[1]  # pose_dim: x,y,z,sin_h, cos_h, sin_p, cos_p, cos_p*sin_h, cos_p*cos_h
+        obs_dim = obs_space[0].shape[1]
 
         lstm_out = args.lstm_out
         head_name = args.model
@@ -218,12 +211,9 @@ class A3C_Single(torch.nn.Module):  # single vision Tracking
         self.head_name = head_name
 
         self.encoder = AttentionLayer(obs_dim, lstm_out, device)
-
         self.critic = ValueNet(lstm_out, head_name, 1)
-
         self.actor = PolicyNet(lstm_out, action_spaces[0], head_name, device)
 
-        # self.apply(weights_init)
         self.train()
         self.device = device
 
@@ -248,37 +238,26 @@ class A3C_Single(torch.nn.Module):  # single vision Tracking
 class A3C_Multi(torch.nn.Module):
     def __init__(self, obs_space, action_spaces, args, device=torch.device('cpu')):
         super(A3C_Multi, self).__init__()
-        self.num_agents, self.num_targets, self.pose_dim = obs_space.shape  # pose_dim: x,y,z,sin_h, cos_h, sin_p, cos_p, cos_p*sin_h, cos_p*cos_h
+        self.num_agents, self.num_targets, self.pose_dim = obs_space.shape
 
         lstm_out = args.lstm_out
         head_name = args.model
         self.head_name = head_name
 
-        self.encoder = EncodeLinear(self.pose_dim, lstm_out, head_name, device)  # input_size, hiden_size, layers, device
+        self.encoder = EncodeLinear(self.pose_dim, lstm_out, head_name, device)
         feature_dim = self.encoder.feature_dim
-        # feature_dim = self.pose_dim
 
-        if 'att' in head_name:
-            self.attention = AttentionLayer(feature_dim, lstm_out, device)
-            feature_dim = self.attention.feature_dim
-        elif 'birnn' in head_name:
-            self.fusion = BiRNN(feature_dim, lstm_out // 2, 1, device, 'gru')
-            feature_dim = self.fusion.feature_dim
+        self.attention = AttentionLayer(feature_dim, lstm_out, device)
+        feature_dim = self.attention.feature_dim
 
         # create actor & critic
         self.actor = PolicyNet(feature_dim, spaces.Discrete(2), head_name, device)
 
-        # self.attention_member = AttentionLayer(self.pose_dim, lstm_out, device)
-        # self.attention_coalition = AttentionLayer(self.pose_dim, lstm_out, device)
         if 'shap' in head_name:
             self.ShapleyVcritic = AMCValueNet(feature_dim, head_name, 1, device)
         else:
-            # self.attentionCritic = AttentionLayer(feature_dim, lstm_out, device)
             self.critic = ValueNet(feature_dim, head_name, 1)
 
-        # self.critic = ValueNet(feature_dim*2, head_name, 1)
-
-        # self.apply(weights_init)
         self.train()
         self.device = device
 
@@ -286,27 +265,16 @@ class A3C_Multi(torch.nn.Module):
         pos_obs = inputs
 
         feature_target = Variable(pos_obs, requires_grad=True)
-        # feature_target = feature_target.reshape(-1, self.pose_dim).unsqueeze(0)  # [1, agent*target, feature_dim]
-        # target2camera pose
         feature_target = self.encoder(feature_target)  # num_agent, num_target, feature_dim
 
         feature_target = feature_target.reshape(-1, self.encoder.feature_dim).unsqueeze(0)  # [1, agent*target, feature_dim]
-
-        if 'att' in self.head_name:
-            feature, global_feature = self.attention(feature_target)  # num_agents, feature_dim
-            feature = feature.squeeze()
-
-            # vis_heatmap(weights.squeeze().detach())
-        elif 'birnn' in self.head_name:
-            feature, global_feature = self.fusion(feature_target)
-            global_feature = global_feature.reshape(1, -1)
-            feature = feature.squeeze()
+        feature, global_feature = self.attention(feature_target)  # num_agents, feature_dim
+        feature = feature.squeeze()
 
         actions, entropies, log_probs = self.actor(feature, test)
         actions = actions.reshape(self.num_agents, self.num_targets, -1)
 
-        if 'shap' not in self.head_name:  # or actions.sum() == 0:
-            # _, global_feature = self.attentionCritic(feature_target)
+        if 'shap' not in self.head_name:
             values = self.critic(global_feature)
         else:
             values = self.ShapleyVcritic(feature, actions)  # shape [1,1]

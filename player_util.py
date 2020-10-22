@@ -78,7 +78,7 @@ class Agent(object):
         state_multi, self.reward, self.done, self.info = self.env.step(actions)
         if isinstance(self.done, list): self.done = np.sum(self.done)
         self.state = torch.from_numpy(np.array(state_multi)).float().to(self.device)
-
+        self.rotation = self.info['cost']
         self.eps_len += 1
         if self.args.render:
             self.env.render()

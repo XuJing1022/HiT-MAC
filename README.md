@@ -20,13 +20,13 @@ pip install -r requirements.txt
 To train the executor in the paper, run this command:
 
 ```train
-CUDA_VISIBLE_DEVICES=-1 python main.py --env Pose-v0 --model single-att --workers 6
+python main.py --env Pose-v0 --model single-att --workers 6
 ```
 
 To train the coordinator in the paper, run this command:
 
 ```train
-CUDA_VISIBLE_DEVICES=-1 python main.py --env Pose-v1 --model multi-att-shap --workers 6
+python main.py --env Pose-v1 --model multi-att-shap --workers 6
 ```
 
 ## Evaluation
@@ -34,7 +34,7 @@ CUDA_VISIBLE_DEVICES=-1 python main.py --env Pose-v1 --model multi-att-shap --wo
 To evaluate my model, run:
 
 ```eval
-CUDA_VISIBLE_DEVICES=-1 python main.py --env Pose-v1 --model multi-att-shap --workers 0 --load-model-dir trainedModel/best_coordinator.pth
+python main.py --env Pose-v1 --model multi-att-shap --workers 0 --load-model-dir trainedModel/best_coordinator.pth
 ```
 
 You can use trained models directly from the folder "trainedModel".
