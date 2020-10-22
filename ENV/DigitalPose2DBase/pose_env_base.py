@@ -231,9 +231,12 @@ class Pose_Env_Base:
             cam_info.append([cam_loc, cam_rot])
 
         # r: every camera complete its goal; [camera_num]
-        # tr: target reward [max(r)]; [target_num]
         # gr: coverage rate; [1]
         r, gr, others = self.multi_reward(cam_info, self.goals4cam)
+        # cost by rotation
+        for i, cam in enumerate(self.cam_id):
+            if actions[i] != 0:
+                r[i] += -0.01
 
         if others:
             info['Coverage_rate'] = others['Coverage_rate']

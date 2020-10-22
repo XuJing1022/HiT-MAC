@@ -39,18 +39,6 @@ CUDA_VISIBLE_DEVICES=-1 python main.py --env Pose-v1 --model multi-att-shap --wo
 
 You can use trained models directly from the folder "trainedModel".
 
-## Results
-
-Our model achieves the following performance compared with baselines:
-
-| Model name         | Coverage Rate   | Average Gain   |
-| ------------------ |---------------- | -------------- |
-| MADDPG             |     85%         |      95%       |
-| SQDDPG             |     85%         |      95%       |
-| COMA               |     85%         |      95%       |
-| ILP                |     85%         |      95%       |
-| HiT-MAC            |     85%         |      95%       |
-
 ## Contributing
 If you found this work useful, please consider citing:
 >📋  Pick a licence and describe how to contribute to your code repository. 
