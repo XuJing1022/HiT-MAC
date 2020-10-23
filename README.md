@@ -34,7 +34,7 @@ python main.py --env Pose-v1 --model multi-att-shap --workers 6
 To evaluate my model, run:
 
 ```eval
-python main.py --env Pose-v1 --model multi-att-shap --workers 0 --load-model-dir trainedModel/best_coordinator.pth
+python main.py --env Pose-v1 --model multi-att-shap --workers 0 --load-coordinator-dir trainedModel/best_coordinator.pth --load-executor-dir trainedModel/best_executor.pth
 ```
 
 You can use trained models directly from the folder "trainedModel".

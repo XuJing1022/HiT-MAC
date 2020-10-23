@@ -22,7 +22,7 @@ class Pose_Env_Base:
                  config_path="PoseEnvLarge_multi.json",
                  render_save=False,
                  setting_path=None,
-                 slave_rule=False
+                 slave_rule=args.load_executor_dir is None
                  ):
 
         self.nav = nav
@@ -89,7 +89,7 @@ class Pose_Env_Base:
             self.slave = A3C_Single(np.zeros((1, 1, 4)), [spaces.Discrete(3)], args)
             self.slave = self.slave.to(self.device)
             saved_state = torch.load(
-                'trainedModel/best_executor.pth',
+                args.load_executor_dir,  # 'trainedModel/best_executor.pth',
                 map_location=lambda storage, loc: storage)
             self.slave.load_state_dict(saved_state['model'], strict=False)
             self.slave.eval()

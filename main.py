@@ -27,7 +27,8 @@ parser.add_argument('--test-eps', type=int, default=2, metavar='M', help='maximu
 parser.add_argument('--env', default='simple', metavar='Pose-v0', help='environment to train on (default: Pose-v0|Pose-v1)')
 parser.add_argument('--optimizer', default='Adam', metavar='OPT', help='shares optimizer choice of Adam or RMSprop')
 parser.add_argument('--amsgrad', default=True, metavar='AM', help='Adam optimizer amsgrad parameter')
-parser.add_argument('--load-model-dir', default=None, metavar='LMD', help='folder to load trained models from')
+parser.add_argument('--load-coordinator-dir', default=None, metavar='LMD', help='folder to load trained models from')
+parser.add_argument('--load-executor-dir', default=None, metavar='LMD', help='folder to load trained models from')
 parser.add_argument('--log-dir', default='logs/', metavar='LG', help='folder to save logs')
 parser.add_argument('--model', default='single', metavar='M', help='multi-shapleyV|')
 parser.add_argument('--gpu-ids', type=int, default=-1, nargs='+', help='GPUs to use [-1 CPU only] (default: -1)')
@@ -63,11 +64,11 @@ def start():
     env.close()
     del env
 
-    if args.load_model_dir is not None:
+    if args.load_coordinator_dir is not None:
         saved_state = torch.load(
-            args.load_model_dir,
+            args.load_coordinator_dir,
             map_location=lambda storage, loc: storage)
-        if args.load_model_dir[-3:] == 'pth':
+        if args.load_coordinator_dir[-3:] == 'pth':
             shared_model.load_state_dict(saved_state['model'], strict=False)
         else:
             shared_model.load_state_dict(saved_state)
