@@ -313,7 +313,7 @@ class Pose_Env_Base:
         visible = hori_reward > 0 and d <= self.visual_distance
         if visible:
             reward = np.clip(hori_reward, -1, 1)
-        else:  # 在视野范围外
+        else:
             reward = -1
         return reward, visible
 
