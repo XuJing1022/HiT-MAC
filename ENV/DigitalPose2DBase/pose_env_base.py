@@ -199,14 +199,14 @@ class Pose_Env_Base:
             delta_time = 0.3
             for i in range(self.num_target):  # only one
                 loc = list(self.target_pos_list[i])
-                action = self.random_agents[i].act(loc)  # TODO test Goal & Random [v, h_delta, p_delta, v_delta]
+                action = self.random_agents[i].act(loc)
 
                 target_hpr_now = np.array(action[1:])
                 delta_x = target_hpr_now[0] * action[0] * delta_time
                 delta_y = target_hpr_now[1] * action[0] * delta_time
                 while loc[0] + delta_x < self.reset_area[0] or loc[0] + delta_x > self.reset_area[1] or \
                         loc[1] + delta_y < self.reset_area[2] or loc[1] + delta_y > self.reset_area[3]:
-                    action = self.random_agents[i].act(loc)  # TODO test Goal & Random [v, h_delta, p_delta, v_delta]
+                    action = self.random_agents[i].act(loc)
 
                     target_hpr_now = np.array(action[1:])
                     delta_x = target_hpr_now[0] * action[0] * delta_time
@@ -280,7 +280,7 @@ class Pose_Env_Base:
             self.early_stop = 10
 
         # set your done condition
-        if self.count_steps > self.max_steps:  # or self.early_stop == 0:
+        if self.count_steps > self.max_steps:
             info['Done'] = True
 
         reward = info['Reward']
@@ -291,7 +291,7 @@ class Pose_Env_Base:
         if self.count_steps % 10 == 0:
             self.reset_goalmap(info['Distance'])
         state, self.state_dim = self.preprocess_pose(info)
-        return state, reward, info['Done'], info  # TODO: train single with local reward or global reward?
+        return state, reward, info['Done'], info
 
     def reset_goalmap(self, distances):
         for cam_i in range(self.n):
@@ -344,15 +344,15 @@ class Pose_Env_Base:
                     camera_target_dict[i].append(j)
                     target_camera_dict[j].append(i)
                     coverage_rate.append(j)
-                    if goals4cam is None or goals4cam[i][j] > 0 or self.reset_type == 1:  # 如果非层级结构，则没有goal4cam
-                        captured_targets.append(j)  # 训练时追求goal的完成度，即goal下的覆盖率
+                    if goals4cam is None or goals4cam[i][j] > 0 or self.reset_type == 1:
+                        captured_targets.append(j)
                         captured_num += 1
 
                 if goals4cam is None and visible or goals4cam is not None and goals4cam[i][j] > 0:
-                    local_rewards.append(reward)  # 每个相机的goal的完成度，即想追的是否都已进入画面；而非goal的部分不作排除要求，因为可能是target的路线自身造成的出现在画面中
+                    local_rewards.append(reward)
                     goal_num += 1
                 camera_target_reward[i].append(reward)
-            camera_local_goal.append(captured_num / goal_num if goal_num != 0 else -1)  # 谁都不追的话，则最差；如果选的越多，此处能到满分越难
+            camera_local_goal.append(captured_num / goal_num if goal_num != 0 else -1)
             camera_local_rewards.append(np.mean(local_rewards) if len(local_rewards) > 0 else 0)
             camera_local = camera_local_rewards
 

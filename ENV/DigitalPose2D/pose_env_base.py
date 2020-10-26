@@ -209,7 +209,7 @@ class Pose_Env_Base:
             delta_time = 0.13
             for i in range(self.num_target):  # only one
                 loc = list(self.target_pos_list[i])
-                action = self.random_agents[i].act(loc)  # TODO test Goal & Random [v, h_delta, p_delta, v_delta]
+                action = self.random_agents[i].act(loc)
 
                 target_hpr_now = np.array(action[1:])
                 delta_x = target_hpr_now[0] * action[0] * delta_time
@@ -306,7 +306,7 @@ class Pose_Env_Base:
         # render(info['Cam_Pose'], info['Target_Pose'], reward, self.goals4cam, save=False)
 
         state, self.state_dim = self.preprocess_pose(info, GoalMap=self.goals4cam)
-        return state, reward, info['Done'], info  # TODO: train single with local reward or global reward?
+        return state, reward, info['Done'], info
 
     def get_baseline_action(self, cam_loc_rot, goals, i):
         camera_target_visible = []
@@ -416,14 +416,14 @@ class Pose_Env_Base:
                     camera_target_dict[i].append(j)
                     target_camera_dict[j].append(i)
                     coverage_rate.append(j)
-                    if goals4cam is None or goals4cam[i][j] > 0:  # 如果非层级结构，则没有goal4cam
-                        captured_targets.append(j)  # 训练时追求goal的完成度，即goal下的覆盖率
+                    if goals4cam is None or goals4cam[i][j] > 0:
+                        captured_targets.append(j)
                         captured_num += 1
 
                 if goals4cam is None and visible or goals4cam is not None and goals4cam[i][j] > 0:
-                    local_rewards.append(reward)  # 每个相机的goal的完成度，即想追的是否都已进入画面；而非goal的部分不作排除要求，因为可能是target的路线自身造成的出现在画面中
+                    local_rewards.append(reward)
                     goal_num += 1
-            camera_local_goal.append(captured_num / goal_num if goal_num != 0 else -1)  # 谁都不追的话，则最差；如果选的越多，此处能到满分越难
+            camera_local_goal.append(captured_num / goal_num if goal_num != 0 else -1)
             camera_local_rewards.append(np.mean(local_rewards) if len(local_rewards) > 0 else 0)
             camera_local = camera_local_rewards
 
@@ -468,7 +468,7 @@ class Pose_Env_Base:
         for cam_i in range(camera_num):
             # target info
             target_info = []
-            for target_j in range(target_num):  # 所有相机知道所有target的位置
+            for target_j in range(target_num):
                 [angle_h] = angles[cam_i, target_j]
                 target_angle = [cam_i / camera_num, target_j / target_num, angle_h / 180]
                 line = target_angle + [distances[cam_i, target_j] / 2000]
