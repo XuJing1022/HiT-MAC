@@ -62,8 +62,6 @@ def test(args, shared_model, optimizer, train_modes, n_iters):
             count_eps += 1
             fps_all = []
             while True:
-                if args.render:
-                    env.render()
                 player.action_test()
                 fps_counter += 1
                 reward_sum_ep += player.reward

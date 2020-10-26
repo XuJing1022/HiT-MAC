@@ -43,8 +43,7 @@ class Pose_Env_Base:
         self.start_area = self.get_start_area(self.safe_start[0], self.visual_distance // 2)
 
         # define action space
-        self.action_space = [spaces.Discrete(len(self.discrete_actions)) for i in range(
-            self.n)]  # Box(low=-1.0, high=1.0, shape=(self.num_cam, self.num_target), dtype=np.float32)
+        self.action_space = [spaces.Discrete(len(self.discrete_actions)) for i in range(self.n)]
         self.rotation_scale = setting['rotation_scale']
 
         # define observation space
@@ -286,7 +285,7 @@ class Pose_Env_Base:
         reward = info['Reward']
 
         # show
-        render(info['Cam_Pose'], np.array(self.target_pos_list), gr, self.goals4cam, save=True)
+        # render(info['Cam_Pose'], np.array(self.target_pos_list), gr, self.goals4cam, save=self.render_save)
 
         if self.count_steps % 10 == 0:
             self.reset_goalmap(info['Distance'])
@@ -398,12 +397,12 @@ class Pose_Env_Base:
             target_isSelected_list = self.goals4cam[cam_i]
             # target info
             target_info = []
-            for target_j in range(target_num):  # 所有相机知道所有target的位置
+            for target_j in range(target_num):
                 if self.reset_type == 0 and target_isSelected_list[target_j] == 0:
                     continue
                 [angle_h] = angles[cam_i, target_j]
                 target_angle = [cam_i / camera_num, target_j / target_num, angle_h / 180]
-                line = target_angle + [distances[cam_i, target_j] / 2000]
+                line = target_angle + [distances[cam_i, target_j] / 2000]  # 2000 is related with the area of cameras
                 target_info += line
             target_info = target_info + [0] * (feature_dim - len(target_info))
             state[cam_i] = target_info
@@ -411,27 +410,7 @@ class Pose_Env_Base:
         return state, state_dim
 
 
-class RandomAgent(object):
-    """The world's simplest agent!"""
-
-    def __init__(self, action_space):
-        self.step_counter = 0
-        self.keep_steps = 0
-        self.action_space = action_space
-
-    def act(self):
-        self.step_counter += 1
-        if self.step_counter > self.keep_steps:
-            self.action = self.action_space.sample()
-            self.keep_steps = np.random.randint(1, 10)
-        return self.action
-
-    def reset(self):
-        self.step_counter = 0
-        self.keep_steps = 0
-
-
-class GoalNavAgent(object):  # TODO debug
+class GoalNavAgent(object):
 
     def __init__(self, id, action_space, goal_area, goal_list=None):
         self.id = id

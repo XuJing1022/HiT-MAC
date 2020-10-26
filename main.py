@@ -23,7 +23,7 @@ parser.add_argument('--grad-entropy', type=float, default=1.0, metavar='T', help
 parser.add_argument('--seed', type=int, default=1, metavar='S', help='random seed (default: 1)')
 parser.add_argument('--workers', type=int, default=1, metavar='W', help='how many training processes to use (default: 32)')
 parser.add_argument('--num-steps', type=int, default=20, metavar='NS', help='number of forward steps in A3C (default: 300)')
-parser.add_argument('--test-eps', type=int, default=2, metavar='M', help='maximum length of an episode (default: 10000)')
+parser.add_argument('--test-eps', type=int, default=1, metavar='M', help='testing episode length')
 parser.add_argument('--env', default='simple', metavar='Pose-v0', help='environment to train on (default: Pose-v0|Pose-v1)')
 parser.add_argument('--optimizer', default='Adam', metavar='OPT', help='shares optimizer choice of Adam or RMSprop')
 parser.add_argument('--amsgrad', default=True, metavar='AM', help='Adam optimizer amsgrad parameter')

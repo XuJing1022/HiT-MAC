@@ -303,7 +303,7 @@ class Pose_Env_Base:
         reward = info['Global_reward']
 
         # # show
-        # render(info['Cam_Pose'], info['Target_Pose'], reward, self.goals4cam, save=False)
+        # render(info['Cam_Pose'], info['Target_Pose'], reward, self.goals4cam, save=self.render_save)
 
         state, self.state_dim = self.preprocess_pose(info, GoalMap=self.goals4cam)
         return state, reward, info['Done'], info
@@ -365,7 +365,7 @@ class Pose_Env_Base:
             gre += gr
 
             # render
-            # render(Cam_Pose, np.array(self.target_pos_list), gr, self.goals4cam, save=False)
+            # render(Cam_Pose, np.array(self.target_pos_list), gr, self.goals4cam, save=self.render_save)
 
         cost = cost / keep
         others['cost'] = cost
@@ -471,7 +471,7 @@ class Pose_Env_Base:
             for target_j in range(target_num):
                 [angle_h] = angles[cam_i, target_j]
                 target_angle = [cam_i / camera_num, target_j / target_num, angle_h / 180]
-                line = target_angle + [distances[cam_i, target_j] / 2000]
+                line = target_angle + [distances[cam_i, target_j] / 2000]  # 2000 is related with the area of cameras
                 target_info += line
             target_info = target_info + [0] * (feature_dim - len(target_info))
             state[cam_i] = target_info
@@ -479,27 +479,7 @@ class Pose_Env_Base:
         return state, state_dim
 
 
-class RandomAgent(object):
-    """The world's simplest agent!"""
-
-    def __init__(self, action_space):
-        self.step_counter = 0
-        self.keep_steps = 0
-        self.action_space = action_space
-
-    def act(self):
-        self.step_counter += 1
-        if self.step_counter > self.keep_steps:
-            self.action = self.action_space.sample()
-            self.keep_steps = np.random.randint(1, 10)
-        return self.action
-
-    def reset(self):
-        self.step_counter = 0
-        self.keep_steps = 0
-
-
-class GoalNavAgent(object):  # TODO debug
+class GoalNavAgent(object):
 
     def __init__(self, id, action_space, goal_area, goal_list=None):
         self.id = id

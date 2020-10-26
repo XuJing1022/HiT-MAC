@@ -47,11 +47,6 @@ class Agent(object):
         self.cxs = torch.zeros(self.num_agents, self.lstm_out).to(device)
         self.rank = 0
 
-    def wrap_action(self, action, high, low):
-        action = np.squeeze(action)
-        out = action * (high - low)/2.0 + (high + low)/2.0
-        return out
-
     def action_train(self):
         self.n_steps += 1
         value_multi, actions, entropy, log_prob = self.model(Variable(self.state, requires_grad=True))
@@ -68,8 +63,6 @@ class Agent(object):
         self.entropies.append(entropy)
         self.log_probs.append(log_prob)
         self.rewards.append(self.reward.unsqueeze(1))
-        if self.args.render:
-            self.env.render()
 
     def action_test(self):
         with torch.no_grad():
@@ -80,8 +73,6 @@ class Agent(object):
         self.state = torch.from_numpy(np.array(state_multi)).float().to(self.device)
         self.rotation = self.info['cost']
         self.eps_len += 1
-        if self.args.render:
-            self.env.render()
 
     def reset(self):
         obs = self.env.reset()
