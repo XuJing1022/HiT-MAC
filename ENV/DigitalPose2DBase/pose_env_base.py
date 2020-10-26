@@ -340,7 +340,7 @@ class Pose_Env_Base:
                 angle_h = self.get_hori_direction(cam_loc + cam_rot, self.target_pos_list[j])
                 d = self.get_distance(cam_loc + cam_rot, self.target_pos_list[j])
                 reward, visible = self.angle_reward(angle_h, d)
-                if visible:  # 在视野范围内
+                if visible:
                     camera_target_dict[i].append(j)
                     target_camera_dict[j].append(i)
                     coverage_rate.append(j)
