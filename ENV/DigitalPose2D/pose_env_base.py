@@ -158,7 +158,6 @@ class Pose_Env_Base:
             self.set_rotation(cam, cam_rot)
 
         self.count_steps = 0
-        self.early_stop = 20
         self.goal_keep = 0
         self.goals4cam = np.ones([self.n, self.num_target])
 
@@ -281,29 +280,12 @@ class Pose_Env_Base:
         info['Distance'] = np.array(gt_distance)
         info['Directions'] = np.array(gt_directions)
 
-        # Target_mutual_distance
-        gt_target_mu_distance = np.zeros([self.num_target, self.num_target])
-        for i in range(self.num_target):
-            for j in range(i + 1):
-                d = self.get_distance(self.target_pos_list[i], self.target_pos_list[j])
-                gt_target_mu_distance[i, j] = d
-                gt_target_mu_distance[j, i] = d
-        info['Target_mutual_distance'] = gt_target_mu_distance
-
         self.count_steps += 1
-        if max(info['Global_reward'].flatten()) < -1 or not info['Reward'].all(0) > 0:
-            self.early_stop -= 1
-        else:
-            self.early_stop = 10
-
         # set your done condition
-        if self.count_steps > self.max_steps:  # or self.early_stop == 0:
+        if self.count_steps > self.max_steps:
             info['Done'] = True
 
         reward = info['Global_reward']
-
-        # # show
-        # render(info['Cam_Pose'], info['Target_Pose'], reward, self.goals4cam, save=self.render_save)
 
         state, self.state_dim = self.preprocess_pose(info, GoalMap=self.goals4cam)
         return state, reward, info['Done'], info
