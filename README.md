@@ -1,6 +1,6 @@
 # Learning Multi-Agent Coordination for Enhancing Target Coverage in Directional Sensor Networks
 
-This repository is the official implementation of [Learning Multi-Agent Coordination for Enhancing Target Coverage in Directional Sensor Networks](https://arxiv.org/abs/2030.12345). 
+This repository is the official implementation of [Learning Multi-Agent Coordination for Enhancing Target Coverage in Directional Sensor Networks](https://arxiv.org/abs/2010.13110). 
 
 ![](graphicExplaining/DSN_5.Jpeg)
 >📋  Project website: [HiT-MAC](https://sites.google.com/view/hit-mac)
