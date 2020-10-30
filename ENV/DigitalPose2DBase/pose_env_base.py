@@ -5,6 +5,9 @@ import numpy as np
 from gym import spaces
 
 from ENV.DigitalPose2D.render import render
+from main import parser
+
+args = parser.parse_args()
 
 
 class Pose_Env_Base:
@@ -51,6 +54,7 @@ class Pose_Env_Base:
         self.observation_space = np.zeros((self.n, self.num_target, self.state_dim), int)
 
         self.render_save = render_save
+        self.render = args.render
 
         self.cam = dict()
         for i in range(len(self.cam_id) + 1):
@@ -270,8 +274,8 @@ class Pose_Env_Base:
 
         reward = info['Reward']
 
-        # show
-        # render(info['Cam_Pose'], np.array(self.target_pos_list), gr, self.goals4cam, save=self.render_save)
+        if self.render:
+            render(info['Cam_Pose'], np.array(self.target_pos_list), gr, self.goals4cam, save=self.render_save)
 
         if self.count_steps % 10 == 0:
             self.reset_goalmap(info['Distance'])

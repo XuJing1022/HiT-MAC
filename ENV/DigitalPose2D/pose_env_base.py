@@ -65,6 +65,7 @@ class Pose_Env_Base:
         self.observation_space = np.zeros((self.n, self.num_target, self.state_dim), int)
 
         self.render_save = render_save
+        self.render = args.render
 
         self.cam = dict()
         for i in range(len(self.cam_id) + 1):
@@ -347,7 +348,8 @@ class Pose_Env_Base:
             gre += gr
 
             # render
-            # render(Cam_Pose, np.array(self.target_pos_list), gr, self.goals4cam, save=self.render_save)
+            if self.render:
+                render(Cam_Pose, np.array(self.target_pos_list), gr, self.goals4cam, save=self.render_save)
 
         cost = cost / keep
         others['cost'] = cost
