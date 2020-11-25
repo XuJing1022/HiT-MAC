@@ -41,7 +41,7 @@ You can use trained models directly from the folder "trainedModel".
 
 ## Citation
 If you found this work useful, please consider citing:
-'''
+```
 @article{xu2020learning,
   title={Learning Multi-Agent Coordination for Enhancing Target Coverage in Directional Sensor Networks},
   author={Xu, Jing and Zhong, Fangwei and Wang, Yizhou},
@@ -49,7 +49,7 @@ If you found this work useful, please consider citing:
   volume={33},
   year={2020}
 }
-'''
+```
 
 ## Contact
 If you have any suggestion/questions, get in touch at [jing.xu@pku.edu.cn](jing.xu@pku.edu.cn)
