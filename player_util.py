@@ -46,6 +46,7 @@ class Agent(object):
         self.hxs = torch.zeros(self.num_agents, self.lstm_out).to(device)
         self.cxs = torch.zeros(self.num_agents, self.lstm_out).to(device)
         self.rank = 0
+        self.rotation = 0
 
     def action_train(self):
         self.n_steps += 1
@@ -71,7 +72,8 @@ class Agent(object):
         state_multi, self.reward, self.done, self.info = self.env.step(actions)
         if isinstance(self.done, list): self.done = np.sum(self.done)
         self.state = torch.from_numpy(np.array(state_multi)).float().to(self.device)
-        self.rotation = self.info['cost']
+        if self.env.reset_type == 1:
+            self.rotation = self.info['cost']
         self.eps_len += 1
 
     def reset(self):
